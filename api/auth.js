@@ -31,7 +31,6 @@ app.post('/login', (req, res) =>
 {
     if(req.body.email && req.body.password)
     {
-        res.contentType('application/json');
         db.managers.findAll({where: {email: req.body.email}})
             .then(obj =>
                   {
@@ -41,12 +40,13 @@ app.post('/login', (req, res) =>
                           if (bcrypt.compareSync(req.body.password.toString(), iter.password))
                           {
                               is_auth = true;
-                              res.json(jwt.sign({id: obj.id, email: obj.email}, 'test'));
+                              res.send(jwt.sign({id: iter.id, email: iter.email}, 'test', {expiresIn: 300}));
+                              break;
                           }
                       }
                       if(!is_auth)
                       {
-                          res.json({error: 400})
+                          res.send(400)
                       }
                   });
     }
