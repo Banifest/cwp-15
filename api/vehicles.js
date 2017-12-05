@@ -22,15 +22,27 @@ app.get('/read', (req, res) =>
 
 app.post('/create', (req, res)=>
 {
-    console.log( req.body.fleetId);
     res.contentType('application/json');
-    db.vehicles.create
-    (
-        {
-            name: req.body.name,
-            fleetId: req.body.fleetId
-        }
-    ).then((vehicle)=> res.json(vehicle));
+    if(!req.body.name)  res.json({error: 400});
+    if(req.body.fleetId)
+    {
+        db.fleets.findById(req.body.fleetId)
+            .then(fleet=>
+                  {
+                      if(!fleet) res.json({error: 400});
+                      db.vehicles.create
+                      (
+                          {
+                              name: req.body.name,
+                              fleetId: req.body.fleetId
+                          }
+                      ).then((vehicle)=> res.json(vehicle));
+                  })
+    }
+    else
+    {
+        res.json({error: 400});
+    }
 });
 
 app.post('/update', (req, res)=>

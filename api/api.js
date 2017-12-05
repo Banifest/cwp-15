@@ -11,6 +11,9 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use('/vehicles', require('./vehicles'));
 app.use('/fleets', require('./fleets'));
 app.use('/motions', require('./motions'));
+app.use('/auth', require('./auth'));
+
+//app.all('/auth')
 
 app.all('/*', (req, res, next) =>
 {

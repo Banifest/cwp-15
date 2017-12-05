@@ -10,15 +10,36 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.post('/create', (req, res)=>
 {
     res.contentType('application/json');
-    db.motions.create
-    (
-        {
-            latitude: req.body.latitude,
-            longitude: req.body.longitude,
-            time: req.body.time,
-            vehicleId: req.body.vehicleId
-        }
-    ).then((motion)=> res.json(motion));
+    if(!req.body.latitude)  res.json({error: 400});
+    if(!req.body.longitude)  res.json({error: 400});
+    if(!req.body.time)  res.json({error: 400});
+    if(!req.body.vehicleId)
+    {
+        res.json({error: 400})
+    }
+    else
+    {
+        db.vehicles.findById(req.body.vehicleId)
+            .then((vehicle)=>
+                  {
+                      if (!vehicle)
+                      {
+                          res.json({error: 400});
+                      }
+                      else
+                      {
+                          db.motions.create
+                          (
+                              {
+                                  latitude: req.body.latitude,
+                                  longitude: req.body.longitude,
+                                  time: req.body.time,
+                                  vehicleId: req.body.vehicleId
+                              }
+                          ).then((motion) => res.json(motion));
+                      }
+                  })
+    }
 });
 
 app.post('/milage', (req, res)=>
