@@ -16,7 +16,8 @@ app.post('/register', (req, res) =>
         db.managers.create(
             {
                 email: `${req.body.email}`,
-                password: `${bcrypt.hashSync(req.body.password.toString(), 8)}`
+                password: `${bcrypt.hashSync(req.body.password.toString(), 8)}`,
+                super: req.body.super
             }
         ).then(() => res.json({status: "OK"}));
     }

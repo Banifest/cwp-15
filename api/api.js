@@ -27,8 +27,7 @@ app.all(/\/motions|\/fleets|\/vehicles/, function (req, res, next) {
             {
                 db.managers.findById(decoded.id)
                     .then
-                    (query=> { query? req.manager=query: res.send(403); });
-                next();
+                    (query=> { query? req.manager=query: res.send(403); next();});
             }
         });
     }

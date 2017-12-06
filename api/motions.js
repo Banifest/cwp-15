@@ -19,53 +19,66 @@ app.post('/create', (req, res)=>
     }
     else
     {
-        db.vehicles.findById(req.body.vehicleId)
-            .then((vehicle)=>
-                  {
-                      if (!vehicle)
+        if(req.manager.super)
+        {
+            db.vehicles.findById(req.body.vehicleId)
+                .then((vehicle)=>
                       {
-                          res.json({error: 400});
-                      }
-                      else
-                      {
-                          db.motions.create
-                          (
-                              {
-                                  latitude: req.body.latitude,
-                                  longitude: req.body.longitude,
-                                  time: req.body.time,
-                                  vehicleId: req.body.vehicleId
-                              }
-                          ).then((motion) => res.json(motion));
-                      }
-                  })
+                          if (!vehicle)
+                          {
+                              res.json({error: 400});
+                          }
+                          else
+                          {
+                              db.motions.create
+                              (
+                                  {
+                                      latitude: req.body.latitude,
+                                      longitude: req.body.longitude,
+                                      time: req.body.time,
+                                      vehicleId: req.body.vehicleId
+                                  }
+                              ).then((motion) => res.json(motion));
+                          }
+                      })
+        }
+        else
+        {
+
+        }
     }
 });
 
 app.post('/milage', (req, res)=>
 {
     res.contentType('application/json');
-    db.motions.findAll({where: {vehicleId: req.body.id}})
-        .then(motions =>
-              {
-                  let milage = 0;
-                  if(!motions.length)
+    if(req.manager.super)
+    {
+        db.motions.findAll({where: {vehicleId: req.body.id}})
+            .then(motions =>
                   {
-                      res.json({error: 400});
-                  }
+                      let milage = 0;
+                      if(!motions.length)
+                      {
+                          res.json({error: 400});
+                      }
 
-                  for(let iter=1;iter<motions.length;iter++)
-                  {
-                      console.log(motions[iter].latLng);
-                      milage += geolib.getDistance
-                      (
-                          motions[iter].latLng,
-                          motions[iter - 1].latLng
-                      );
-                  }
-                  res.json({motion: milage});
-              })
+                      for(let iter=1;iter<motions.length;iter++)
+                      {
+                          console.log(motions[iter].latLng);
+                          milage += geolib.getDistance
+                          (
+                              motions[iter].latLng,
+                              motions[iter - 1].latLng
+                          );
+                      }
+                      res.json({motion: milage});
+                  })
+    }
+    else
+    {
 
+    }
 });
 
 module.exports = app;
