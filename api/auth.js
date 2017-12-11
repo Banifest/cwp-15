@@ -17,7 +17,8 @@ app.post('/register', (req, res) =>
             {
                 email: `${req.body.email}`,
                 password: `${bcrypt.hashSync(req.body.password.toString(), 8)}`,
-                super: req.body.super
+                super: req.body.super,
+                fleetId: req.body.fleetId
             }
         ).then(() => res.json({status: "OK"}));
     }
