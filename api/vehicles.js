@@ -36,7 +36,7 @@ app.get('/read', (req, res) =>
     }
     else
     {
-        db.fleets.findAll({where: {id: req.headers.id, fleetId: req.manager.fleetId}})
+        db.vehicles.findAll({where: {id: req.headers.id, fleetId: req.manager.fleetId}})
             .then(query =>
                   {
                       if(query)
@@ -111,7 +111,7 @@ app.post('/update', (req, res)=>
     }
     else
     {
-        db.vehicles.findAll({where: {id: res.headers.id, fleetId: req.manager.fleetId}})
+        db.vehicles.findAll({where: {id: req.body.id, fleetId: req.manager.fleetId}})
             .then(query =>
                   {
                       if(query.length)
@@ -144,17 +144,13 @@ app.post('/delete', (req, res)=>
     }
     else
     {
-        db.vehicles.findAll({where: {id: res.headers.id, fleetId: req.manager.fleetId}})
+        db.vehicles.findAll({where: {id: req.body.id, fleetId: req.manager.fleetId}})
             .then(query =>
                   {
                       if(query.length)
                       {
-                          db.vehicles.update(
-                              {
-                                  name: req.body.name,
-                                  fleetId: req.body.fleetId
-                              }, {where: {id: req.body.id}})
-                              .then((vehicle)=> db.vehicles.findById(req.body.id).then(query => query?  res.json(query): res.json('{error: 400}')))
+                          db.vehicles.destroy({where: {id: req.body.id}})
+                              .then(query => query?  res.json(vehicle): res.json('{error: 400}'));
                       }
                       else
                       {

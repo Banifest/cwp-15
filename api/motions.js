@@ -44,7 +44,7 @@ app.post('/create', (req, res)=>
         }
         else
         {
-            db.vehicles.findAll({where: {id: res.headers.id, fleetId: req.manager.fleetId}})
+            db.vehicles.findAll({where: {id: req.body.id, fleetId: req.manager.fleetId}})
                 .then(query =>
                       {
                           if(query.length)
@@ -96,7 +96,7 @@ app.post('/milage', (req, res)=>
     }
     else
     {
-        db.vehicles.findAll({where: {id: res.headers.id, fleetId: req.manager.fleetId}})
+        db.vehicles.findAll({where: {id: req.body.id, fleetId: req.manager.fleetId}})
             .then(query =>
                   {
                       if(query.length)

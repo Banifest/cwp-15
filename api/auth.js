@@ -13,15 +13,25 @@ app.post('/register', (req, res) =>
     res.contentType('application/json');
     if(req.body.email && req.body.password)
     {
-        db.managers.create(
-            {
-                email: `${req.body.email}`,
-                password: `${bcrypt.hashSync(req.body.password.toString(), 8)}`,
-                super: req.body.super,
-                fleetId: req.body.fleetId
-            }
-        ).then(() => res.json({status: "OK"}));
-    }
+        db.fleets.findById(req.body.fleetId)
+            .then(query =>
+                  {
+                      if(query)
+                      {
+                          db.managers.create(
+                              {
+                                  email: `${req.body.email}`,
+                                  password: `${bcrypt.hashSync(req.body.password.toString(), 8)}`,
+                                  super: req.body.super,
+                                  fleetId: req.body.fleetId
+                              }
+                          ).then(() => res.json({status: "OK"}));
+                      }
+                      else
+                      {
+                          res.json({error: 400})
+                      }
+                  })}
     else
     {
         res.json({status: "400"});
