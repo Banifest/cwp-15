@@ -44,7 +44,7 @@ app.post('/create', (req, res)=>
         }
         else
         {
-            db.vehicles.findAll({where: {id: req.body.id, fleetId: req.manager.fleetId}})
+            db.vehicles.findAll({where: {id: req.body.vehicleId, fleetId: req.manager.fleetId}})
                 .then(query =>
                       {
                           if(query.length)
@@ -73,7 +73,7 @@ app.post('/milage', (req, res)=>
     res.contentType('application/json');
     if(req.manager.super)
     {
-        db.motions.findAll({where: {vehicleId: req.body.id}})
+        db.motions.findAll({where: {vehicleId: req.body.vehicleId}})
             .then(motions =>
                   {
                       let milage = 0;
@@ -96,12 +96,12 @@ app.post('/milage', (req, res)=>
     }
     else
     {
-        db.vehicles.findAll({where: {id: req.body.id, fleetId: req.manager.fleetId}})
+        db.vehicles.findAll({where: {id: req.body.vehicleId, fleetId: req.manager.fleetId}})
             .then(query =>
                   {
                       if(query.length)
                       {
-                          db.motions.findAll({where: {vehicleId: req.body.id}})
+                          db.motions.findAll({where: {vehicleId: req.body.vehicleId}})
                               .then(motions =>
                                     {
                                         let milage = 0;
